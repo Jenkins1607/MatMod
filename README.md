@@ -42,17 +42,8 @@ $$
 
 ---
 
-### 🛠 Технологии
-*   Python 3.x
-*   NumPy, SciPy (`odeint`, `solve_ivp`)
-*   Matplotlib
-
-### 🚀 Как запустить
-```bash
-pip install numpy scipy matplotlib
-
-# Запуск задачи о теплообмене
-python Task2/pot2.py
-
-# Запуск задачи о маятнике
-python Mayatnik/task1.py
+### Уточнения
+В файлах папки Pots скрипты pot1.py, pot2.py относятся к задаче 2;
+ pot0.py - к задаче 1
+ 
+### SOON: ЗАДАЧА ГАЗЕТЧИКА!
