@@ -42,12 +42,6 @@ $$
 
 ---
 
-### Как запустить
-```bash
-pip install -r requirements.txt
-
-# Запуск задачи о теплообмене
-python Task2/pot2.py
-
-# Запуск задачи о маятнике
-python Mayatnik/task1.py
+### Уточнения
+В файлах папки Pots скрипты pot1.py, pot2.py относятся к задаче 2
+pot0.py - к задаче 1
