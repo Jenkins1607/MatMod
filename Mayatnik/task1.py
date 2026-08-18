@@ -43,14 +43,14 @@ def numericSolution(t_span, func=getDiffTerm):
 
     return solValues
 
-def EilerSolution():
+def EilerSolution(t_span):
     """
     Метод Эйлера-Кромера:
     возвращает массив углов
     """
-    tau = 0.1
+    tau = t_span[1] - t_span[0]
     t_max = 20.0
-    N = 200
+    N = len(t_span)
 
     alpha = 0.3 # угол
     omega = 0.0 # (скорость) производная от alpha
@@ -61,7 +61,7 @@ def EilerSolution():
     omega_hist = np.zeros(N)
 
     for i in range(N):
-        t_vals[i] = i * tau # массив времени
+        alpha_hist[i] = alpha
         
         dalpha_dt = omega
         domega_dt = -(g/l)*np.sin(alpha)
@@ -69,9 +69,7 @@ def EilerSolution():
         omega = omega + tau*domega_dt
         alpha = alpha + tau*omega
 
-        alpha_hist[i] = alpha
-
-    return [t_vals, alpha_hist]
+    return alpha_hist
 
 # === ПОИСК ПИКОВ С ПАРАБОЛИЧЕСКИМ УТОЧНЕНИЕМ ===
 def findPeaksWithParabola(t_vals, alpha_hist):
@@ -101,19 +99,38 @@ def findPeaksWithParabola(t_vals, alpha_hist):
     
     return np.array(peaks_time), np.array(amplitudes)
 
-def showGraph(t_span, analyticValues, numericValues, TimeEilerValues, AlphaEilerValues):
+def showGraph(
+        t_span, 
+        analyticValues, 
+        numericValues,  
+        AlphaEilerValues,
+        diffNumericMethods,
+        A_physic, 
+        T_physic
+        ):
     """
     Строит график всех решений
     (Analytic, Odeint, Eiler)
     """
-    plt.figure(figsize=(10, 5))
-    plt.plot(t_span, analyticValues, "r-", linewidth=2, label= "Аналитическое решение (Математический маятник)")
-    plt.plot(t_span, numericValues, "b-", linewidth=2, label= "Численное решение")
-    plt.plot(TimeEilerValues, AlphaEilerValues, "g-", linewidth=2, label= "Эйлер-Кромер (Физический маятник)")
-    plt.xlabel("Мин.(Время)")
-    plt.ylabel("a (угол отклонения (рад.)")
-    plt.title("Модель колебаний физического и математического маятников")
-    plt.legend()
+    fugure, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 5))
+    ax1.plot(t_span, analyticValues, "r--", linewidth=2, label= "Аналитическое решение (Математический маятник)")
+
+    # ax1.plot(t_span, numericValues,"b-", linewidth=2, label= "Численное решение (scipy.inegrate.odeint)")
+    
+    ax1.plot(t_span, AlphaEilerValues, "g-", linewidth=2, label= "Эйлер-Кромер")
+    ax1.set_xlabel("Время (с)")
+    ax1.set_ylabel("a (угол отклонения (рад.)")
+    ax1.set_title(f"Модель колебаний (Средняя амплитуда = {A_physic:.3f} рад)\nПериод: {T_physic:.4f}\nОценка периода физического маятника:\n{INF:.4f} < {T_physic:.4f} < {SUP:.4f}")
+    ax1.legend()
+
+
+    # Не обязательно, но ради интереса
+    ax2.plot(t_span, diffNumericMethods, "r-", linewidth=2)
+    ax2.set_xlabel("Время(с.)")
+    ax2.set_ylabel("Погрешность (а рад)")
+    ax2.set_title("\nРазность численных методов (odeint - EilerSolution)")
+
+    plt.tight_layout(pad=0.3)
     plt.grid()
     plt.show()
 
@@ -124,23 +141,32 @@ def main():
     numericValues = solValues[:, 0] # извлекаем угол alpha, массив точек времени указан в showGraph() 
 
     # Эйлер
-    TimeEilerValues, AlphaEilerValues = EilerSolution()
+    AlphaEilerValues = EilerSolution(t_span)
+    # разность методов
+    diffNumericMethods = numericValues - AlphaEilerValues
+
     # параболическое уточнение
-    peaks_time, amplitudes = findPeaksWithParabola(TimeEilerValues, AlphaEilerValues)
+    peaks_time, amplitudes = findPeaksWithParabola(t_span, AlphaEilerValues)
 
     # 3. Найти период и амплитуды из полученного решения
     period = np.diff(peaks_time)
     T_physic = np.mean(period)
 
-    # 4. Сравнить с аналитической оценкой для малых углов (T = 2π√(l/g))
-    print(f"Оценка периода физического маятника:\n")
-    print(f"{INF:.4f} < {T_physic:.4f} < {SUP:.4f}\n")
-
     A_physic = np.mean(amplitudes)
 
-    print(f"Амплитуда: {A_physic:.4f} ")
+    # 4. Сравнить с аналитической оценкой для малых углов (T = 2π√(l/g))
+    # если неверно код упадет (AssertionError)
+    assert INF < T_physic < SUP
 
-    showGraph(t_span, analyticValues, numericValues, TimeEilerValues, AlphaEilerValues)
+    showGraph(
+        t_span, 
+        analyticValues, 
+        numericValues, 
+        AlphaEilerValues, 
+        diffNumericMethods,
+        A_physic, 
+        T_physic
+        )
 
 main()
 
