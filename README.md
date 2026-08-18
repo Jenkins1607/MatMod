@@ -42,14 +42,9 @@ $$
 
 ---
 
-### 🛠 Технологии
-*   Python 3.x
-*   NumPy, SciPy (`odeint`, `solve_ivp`)
-*   Matplotlib
-
-### 🚀 Как запустить
+### Как запустить
 ```bash
-pip install numpy scipy matplotlib
+pip install -r requirements.txt
 
 # Запуск задачи о теплообмене
 python Task2/pot2.py
