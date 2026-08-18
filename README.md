@@ -27,11 +27,23 @@
 
 *   **Численно (физический маятник):**
     Нелинейное уравнение $\alpha'' = -\frac{g}{l}\sin\alpha$ сводим к системе:
-    $$ \begin{cases} \alpha' = \omega \\ \omega' = -\frac{g}{l}\sin\alpha \end{cases} $$
+    
+    $$
+    \begin{cases} \alpha' = \omega \\ \omega' = -\frac{g}{l}\sin\alpha \end{cases}
+    $$
+    
     Решаем методом Эйлера–Кромера / Рунге–Кутты:
-    $$ \omega_{n+1} = \omega_n - \tau_h \frac{g}{l} \sin \alpha_n, \quad \alpha_{n+1} = \alpha_n + \tau_h \omega_{n+1} $$
+    
+    $$
+    \omega_{n+1} = \omega_n - \tau_h \frac{g}{l} \sin \alpha_n, \quad \alpha_{n+1} = \alpha_n + \tau_h \omega_{n+1}
+    $$
 
 Период $T_{\Phi}$ — время между максимумами (с параболическим уточнением); он удовлетворяет оценке:
+
+$$
+T_* < T_{\Phi} < \sqrt{\frac{\pi}{2}} T_* \approx 2.516 \text{ с}
+$$
+
 $$ T_* < T_{\Phi} < \sqrt{\frac{\pi}{2}} T_* \approx 2.516 \text{ с} $$
 
 ---
