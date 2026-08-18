@@ -102,6 +102,10 @@ def findPeaksWithParabola(t_vals, alpha_hist):
     return np.array(peaks_time), np.array(amplitudes)
 
 def showGraph(t_span, analyticValues, numericValues, TimeEilerValues, AlphaEilerValues):
+    """
+    Строит график всех решений
+    (Analytic, Odeint, Eiler)
+    """
     plt.figure(figsize=(10, 5))
     plt.plot(t_span, analyticValues, "r-", linewidth=2, label= "Аналитическое решение (Математический маятник)")
     plt.plot(t_span, numericValues, "b-", linewidth=2, label= "Численное решение")
@@ -123,10 +127,12 @@ def main():
     TimeEilerValues, AlphaEilerValues = EilerSolution()
     # параболическое уточнение
     peaks_time, amplitudes = findPeaksWithParabola(TimeEilerValues, AlphaEilerValues)
-    # оценка периода физ. маятника
+
+    # 3. Найти период и амплитуды из полученного решения
     period = np.diff(peaks_time)
     T_physic = np.mean(period)
 
+    # 4. Сравнить с аналитической оценкой для малых углов (T = 2π√(l/g))
     print(f"Оценка периода физического маятника:\n")
     print(f"{INF:.4f} < {T_physic:.4f} < {SUP:.4f}\n")
 
