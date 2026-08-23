@@ -41,7 +41,8 @@ def getParabolaCoeffs(k_values, M_stat):
 def minSquareMethod(coeffs, k_values):
     """
     Возвращает аппроксимированный параболой M_stat,
-    используя метод наименьших квадратов
+    используя метод наименьших квадратов 
+    (сoeffs формируются с помощью МНК)
     """
     A, B, C = coeffs
 
@@ -50,7 +51,7 @@ def minSquareMethod(coeffs, k_values):
     return M_approx
 
 def k_optApprox(coeffs):
-    """Возвращает оптимальное количество газет для approxParabola"""
+    """Возвращает оптимальное количество газет"""
     A, B, _ = coeffs
 
     k_opt = -B/ (2*A)
